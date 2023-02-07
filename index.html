@@ -1,42 +1,210 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-</head>
-<body>
-  <div id="app">
-    <v-app>
-      <v-main>
-        <v-container>Hello world</v-container>
-        <v-btn>haha {{ hi }}</v-btn>
-      </v-main>
-    </v-app>
-  </div>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <v-app>
+        <v-main>
+          <Dataset
+            v-slot="{ ds }"
+            :ds-data="users"
+            :ds-sortby="sortBy"
+            :ds-search-in="['balance', 'birthdate', 'name', 'company', 'email', 'phone', 'address', 'favoriteAnimal']"
+          >
+            <div class="row" :data-page-count="ds.dsPagecount">
+              <div class="col-md-6 mb-2 mb-md-0">
+                <dataset-show />
+              </div>
+              <div class="col-md-6">
+                <dataset-search ds-search-placeholder="Search..." />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-striped d-md-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th
+                          v-for="(th, index) in cols"
+                          :key="th.field"
+                          :class="['sort', th.sort]"
+                          @click="click($event, index)"
+                        >
+                          {{ th.name }} <i class="gg-select float-right"></i>
+                        </th>
+                      </tr>
+                    </thead>
+                    <dataset-item tag="tbody">
+                      <template #default="{ row, rowIndex }">
+                        <tr>
+                          <th scope="row">{{ rowIndex + 1 }}</th>
+                          <td>{{ row.name }}</td>
+                          <td>{{ row.email }}</td>
+                          <td>{{ row.birthdate }}</td>
+                        </tr>
+                      </template>
+                    </dataset-item>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div
+              class="d-flex flex-md-row flex-column justify-content-between align-items-center"
+            >
+              <dataset-info class="mb-2 mb-md-0" />
+              <dataset-pager />
+            </div>
+          </Dataset>
+        </v-main>
+      </v-app>
+    </div>
 
-  <script src="./dist/umd/VueDataset.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="./dist/umd/VueDataset.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 
-  <script>
-    new Vue({
-      el: '#app',
-      vuetify: new Vuetify(),
-      data() {
-        return {
-          'hi': 4444
-        }
-      }
-    })
 
-    Vue.component('Dataset', window.VueDataset.Dataset)
-    Vue.component('DatasetItem', window.VueDataset.DatasetItem)
-    Vue.component('DatasetInfo', window.VueDataset.DatasetInfo)
-    Vue.component('DatasetPager', window.VueDataset.DatasetPager)
-    Vue.component('DatasetSearch', window.VueDataset.DatasetSearch)
-    Vue.component('DatasetShow', window.VueDataset.DatasetShow)
-  </script>
-</body>
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        components: {
+            Dataset: VueDataset.Dataset,
+            DatasetShow: VueDataset.DatasetShow,
+            DatasetItem: VueDataset.DatasetItem,
+            DatasetSearch: VueDataset.DatasetSearch,
+            DatasetPager: VueDataset.DatasetPager,
+            DatasetInfo: VueDataset.DatasetInfo,
+        },
+        data() {
+          return {
+            cols: [
+              {
+                name: "Name",
+                field: "name",
+                sort: "",
+              },
+              {
+                name: "Email",
+                field: "email",
+                sort: "",
+              },
+              {
+                name: "Birthdate",
+                field: "birthdate",
+                sort: "",
+              },
+            ],
+            users: [
+              {
+                _id: "EA265B20-45F2-953C-C534-3E2A7862059C",
+                isActive: false,
+                onlineStatus: "Do not disturb",
+                balance: 93683,
+                birthdate: "1946-07-22",
+                favoriteColor: "orange",
+                firstName: "Harper",
+                lastName: "Nolan",
+                name: "Harper Nolan",
+                company: "Tortor At Risus LLC",
+                email: "amet@posuerevulputate.co.uk",
+                phone: "(0111) 194 7651",
+                address: "P.O. Box 298, 5571 Mauris Rd.",
+                favoriteAnimal: "owl",
+              },
+              {
+                _id: "544E559A-303A-1F35-F1DF-AE2E110465D1",
+                isActive: true,
+                onlineStatus: "Active",
+                balance: 69632,
+                birthdate: "1945-11-27",
+                favoriteColor: "green",
+                firstName: "Whoopi",
+                lastName: "David",
+                name: "Whoopi David",
+                company: "Ipsum Institute",
+                email: "laoreet.ipsum@varius.co.uk",
+                phone: "0800 1111",
+                address: "Ap #473-9010 Risus. Rd.",
+                favoriteAnimal: "pig",
+              },
+              {
+                _id: "7D35F637-F6BD-B371-6BA7-A202D315158E",
+                isActive: false,
+                onlineStatus: "Away",
+                balance: 75903,
+                birthdate: "1955-10-01",
+                favoriteColor: "yellow",
+                firstName: "Peter",
+                lastName: "Mendez",
+                name: "Peter Mendez",
+                company: "Curabitur Dictum LLC",
+                email: "ridiculus.mus.Aenean@urnaVivamus.com",
+                phone: "0800 291 4995",
+                address: "3403 Nam Av.",
+                favoriteAnimal: "duck",
+              },
+            ],
+          };
+        },
+        computed: {
+          sortBy() {
+            return this.cols.reduce((acc, o) => {
+              if (o.sort) {
+                o.sort === "asc" ? acc.push(o.field) : acc.push("-" + o.field);
+              }
+
+              return acc;
+            }, []);
+          },
+        },
+        methods: {
+          click(event, i) {
+            let toset;
+            const sortEl = this.cols[i];
+
+            if (!event.shiftKey) {
+              this.cols.forEach((o) => {
+                if (o.field !== sortEl.field) {
+                  o.sort = "";
+                }
+              });
+            }
+            if (!sortEl.sort) {
+              toset = "asc";
+            }
+            if (sortEl.sort === "desc") {
+              toset = event.shiftKey ? "" : "asc";
+            }
+            if (sortEl.sort === "asc") {
+              toset = "desc";
+            }
+            sortEl.sort = toset;
+          },
+        },
+      });
+
+
+    </script>
+  </body>
 </html>
